@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BasketService, LineOrder } from '../services/basket.service';
 
 declare var $: any;
 declare var Prism: any;
@@ -9,11 +10,16 @@ declare var Prism: any;
   styleUrls: ['./basket.component.css']
 })
 export class BasketComponent implements OnInit {
+  lineOrders: LineOrder[] = [];
+  total: number = 0;
+
   private checkoutStep: 'resume' | 'address' | 'order' = 'resume';
 
-  constructor() { }
+  constructor(private basketService: BasketService) { }
 
   ngOnInit() {
+    this.lineOrders = this.basketService.lineOrders();
+    this.total = this.basketService.total();
     setTimeout(() => { this.init() }, 500);
   }
 
@@ -54,14 +60,6 @@ export class BasketComponent implements OnInit {
     });
   }
 
-  private open() {
-    var styleSwitcher = $('.u-ss');
-    setTimeout(function () {
-      styleSwitcher.addClass('u-ss_opened');
-      styleSwitcher.addClass('u-ss_initialized');
-    }, 100);
-  }
-
   private close() {
     this.checkoutStep = 'resume';
     var styleSwitcher = $('.u-ss');
@@ -69,5 +67,4 @@ export class BasketComponent implements OnInit {
       styleSwitcher.toggleClass('u-ss_opened');
     }
   }
-
 }

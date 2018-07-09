@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-interface LineOrder {
+export interface LineOrder {
   product: Product;
   qty: number;
   price: number;
@@ -10,23 +10,30 @@ interface LineOrder {
   providedIn: 'root'
 })
 export class BasketService {
-  private lineOrders: LineOrder[] = [];
-
   add(product: Product, qty: number) {
-
+    let lineOrders = this.loadLineOrders();
+    lineOrders.push({
+      product: product,
+      qty: qty,
+      price: product.price
+    });
+    window.localStorage.basket = JSON.stringify(lineOrders);
   }
 
   update(id: string, qty: number) {
-    this.lineOrders.filter(x => x.product.id === id).forEach(x => x.qty = qty);
+    let lineOrders = this.loadLineOrders();
+    lineOrders.filter(x => x.product.id === id).forEach(x => x.qty = qty);
   }
 
   remove(id: string) {
-    let index = this.lineOrders.findIndex(x => x.product.id === id);
-    this.lineOrders.splice(index, 1);
+    let lineOrders = this.loadLineOrders();
+    let index = lineOrders.findIndex(x => x.product.id === id);
+    lineOrders.splice(index, 1);
   }
 
-  getLineOrders() {
-    this.lineOrders.map(x => {
+  lineOrders(): LineOrder[] {
+    let lineOrders = this.loadLineOrders();
+    return lineOrders.map(x => {
       return {
         product: x.product,
         qty: x.qty,
@@ -37,7 +44,12 @@ export class BasketService {
 
   total() {
     let total = 0;
-    this.lineOrders.forEach(x => total += x.price);
+    let lineOrders = this.loadLineOrders();
+    lineOrders.forEach(x => total += x.price);
     return total;
+  }
+
+  private loadLineOrders(): LineOrder[] {
+    return JSON.parse(window.localStorage.basket || '[]');
   }
 }

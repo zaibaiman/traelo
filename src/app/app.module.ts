@@ -7,6 +7,7 @@ import { SearchComponent } from './search/search.component';
 import { HomeComponent } from './home/home.component';
 import { BasketComponent } from './basket/basket.component';
 import { BasketService } from './services/basket.service';
+import { ProductsRepositoryService } from './services/products-repository.service';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { BasketService } from './services/basket.service';
     AppRoutingModule
   ],
   providers: [
+    ProductsRepositoryService,
     BasketService
   ],
   bootstrap: [AppComponent]
