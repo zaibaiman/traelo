@@ -1,0 +1,149 @@
+<aside class="u-ss" data-cookies-prefix="unify" data-defaults='[{"customColor": "#72c02c", "outerSpaces": "0px", "contentFont": "Open Sans, Helvetica, Arial, sans-serif", "headingFont": "Open Sans, Helvetica, Arial, sans-serif"}]'>
+  <div class="u-ss-wrap">
+    <header class="u-ss-header">
+      <button class="u-ss-toggler g-color-primary" type="button">
+          <span class="u-badge-v1--sm g-color-white g-bg-primary g-font-size-11 g-line-height-1_4 g-rounded-50x g-pa-4" style="top: 12px !important; right: 12px !important;">4</span>
+        <i class="icon-hotel-restaurant-105 u-line-icon-pro"></i>
+      </button>
+
+      <h2 class="u-ss__main-title">
+          <a class="js-modal-markup u-link-v5  g-color-main  g-color-primary--hover g-mr-15" (click)="onBackClick()" *ngIf="checkoutStep == 'address'">
+            <i class="fa fa-arrow-left"></i>
+          </a>
+          <span *ngIf="checkoutStep == 'resume'">Mi Canasta</span>
+          <span *ngIf="checkoutStep == 'address'">Dirección de Entrega</span>
+          <span *ngIf="checkoutStep == 'order'">Orden Enviada</span>
+      </h2>
+    </header>
+
+    <div class="js-ss-scrollbar u-ss-body">
+      <div [hidden]="checkoutStep != 'resume'">
+        <div id="stepFormSteps">
+            <!-- Shopping Cart -->
+            <div id="step1" class="active">
+              <div class="row">
+                <div class="col-md-12 g-mb-30">
+                  <!-- Products Block -->
+                  <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
+                    <table class="text-center w-100">
+                      <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black g-font-size-13 text-uppercase">
+                        <tr>
+                          <th class="g-font-weight-400 text-left g-pb-20">Producto</th>
+                          <th class="g-font-weight-400 g-width-50 g-pb-20">Cantidad</th>
+                          <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!-- Item-->
+                        <tr class="g-brd-bottom g-brd-gray-light-v3">
+                          <td class="text-left g-py-10">
+                            <img class="d-inline-block g-width-50 mr-4" src="assets/img-temp/150x150/img6.jpg" alt="Image Description">
+                            <div class="d-inline-block align-middle">
+                              <h4 class="h6 g-color-black">Sneaker</h4>
+                              <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_6 mb-0">
+                                <li>Color: Black</li>
+                                <li>Size: MD</li>
+                              </ul>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                              <input class="js-result form-control text-center g-font-size-13 rounded-0 g-pa-0" type="text" value="1" readonly>
+
+                              <div class="input-group-addon d-flex align-items-center g-width-30 g-brd-gray-light-v2 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
+                                <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+                                <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-right g-color-black">
+                            <span class="g-color-gray-dark-v2 g-font-size-13 mr-4">$ 87.00</span>
+                            <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer">
+                              <i class="mt-auto fa fa-trash"></i>
+                            </span>
+                          </td>
+                        </tr>
+                        <!-- End Item-->
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- End Products Block -->
+                </div>
+                <div class="col-md-12 g-mb-30">
+                  <!-- Order Summary -->
+                  <div class="g-bg-gray-light-v5 g-pa-20 g-pb-20">
+                    <div class="d-flex justify-content-between">
+                      <span class="h4 g-color-black">Total</span>
+                      <span class="h4 g-color-black g-font-weight-300">$200.50</span>
+                    </div>
+                  </div>
+                  <!-- End Order Summary -->
+                </div>
+              </div>
+              <section class="u-ss-section">
+                <div class="">
+                  <button class="u-ss-btn u-ss-btn--green g-font-size-13 text-uppercase" (click)="onDeliveryAddressClick()">Continuar con Pedido</button>
+                </div>
+              </section>
+            </div>
+        </div>
+      </div>
+      <div [hidden]="checkoutStep != 'address'">
+        <div>
+          <section class="u-ss-section">
+            <div class="u-ss-control-wrap">
+              <h3 class="u-ss-section__title">Coto</h3>
+              <select class="js-ss-select js-ss-predefined-style u-ss-select" name="predefined-style" style="width: 100%;" data-placeholder="Select style"
+                data-disable-search="true" data-open-icon="fa fa-angle-down" data-close-icon="fa fa-angle-up">
+                <option></option>
+                <option id="preDefSMain" value='[{"checkIDs": {"custom-colors": "clr1", "heading-font": "hFnt1", "font": "fnt1", "layout-styles": "layS1", "outer-spaces": "outS1", "custom-bg": "", "predefined-style": "preDefS1"}, "preDefStyle": "default"}]' selected>Manyara</option>
+                <option id="preDefS1" value='[{"checkIDs": {"custom-colors": "clr2", "heading-font": "hFnt2", "font": "fnt2", "layout-styles": "layS2", "outer-spaces": "outS2", "custom-bg": "bg5", "predefined-style": "preDefS2"}, "preDefStyle": "../../assets/style-switcher-predefined-styles/style1.css"}]'>Nasser</option>
+                <option id="preDefS2" value='[{"checkIDs": {"custom-colors": "clr3", "heading-font": "hFnt3", "font": "fnt3", "layout-styles": "layS3", "outer-spaces": "outS3", "custom-bg": "bg12", "predefined-style": "preDefS3"}, "preDefStyle": "../../assets/style-switcher-predefined-styles/style2.css"}]'>Manitoba</option>
+              </select>
+            </div>
+
+            <div class="u-ss-sub-section-wrap">
+              <div class="u-ss-sub-section_half">
+                <h3 class="u-ss-section__title"># Casa</h3>
+                <input class="u-ss__control" type="text">
+              </div>
+
+              <div class="u-ss-sub-section_half">
+                <h3 class="u-ss-section__title">Tipo de Pago</h3>
+                <select class="js-ss-select js-ss-font u-ss-select" name="content-font" style="width: 100%;" data-placeholder="Select font"
+                  data-disable-search="true" data-open-icon="fa fa-angle-down" data-close-icon="fa fa-angle-up">
+                  <option></option>
+                  <option id="fnt1" value='[{"contentFont":"\"Open Sans\",Helvetica,Arial,sans-serif"}]' selected>Efectivo</option>
+                  <option id="fnt1" value='[{"contentFont":"\"Open Sans\",Helvetica,Arial,sans-serif"}]' selected>Tarjeta Bancaria</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="g-mt-50">
+              <button class="u-ss-btn u-ss-btn--green g-font-size-13 text-uppercase" (click)="onMakeOrderClick()">Hacer Pedido</button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div [hidden]="checkoutStep != 'order'">
+        <div class="row">
+          <div class="col-sm-12 text-center text-lg-left g-mb-50">
+            <!-- Icon Blocks -->
+            <span class="u-icon-v1 u-icon-size--lg g-color-teal g-bg-teal-opacity-0_1 g-font-size-18 rounded-circle mb-4">
+              <i class="icon-education-087 u-line-icon-pro"></i>
+            </span>
+            <h3 class="h5 g-color-black g-font-weight-600 mb-2">Orden Enviada</h3>
+            <p class="mb-0">Su orden a sido enviada y estaremos llegando dentro de los próximos 5 minutos a las puertas de su casa.</p>
+            <!-- End Icon Blocks -->
+
+            <div class="g-mt-50">
+              <button class="u-ss-btn font-size-13 text-uppercase" (click)="onContinueShoppingClick()">Continuar Comprando</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
