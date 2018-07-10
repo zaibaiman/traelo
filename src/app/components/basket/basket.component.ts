@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BasketService, LineOrder } from '../services/basket.service';
+import { BasketService, LineOrder } from '../../services/basket.service';
 
 declare var $: any;
 declare var Prism: any;

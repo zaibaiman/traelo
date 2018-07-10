@@ -84,6 +84,6 @@ export class BasketService {
   }
 
   private fireChangedEventListener() {
-    this.listeners.forEach(x => x());
+    this.listeners.forEach(listener => listener());
   }
 }

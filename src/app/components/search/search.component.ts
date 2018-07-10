@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsRepositoryService } from '../services/products-repository.service';
-import { BasketService } from '../services/basket.service';
+import { ProductsRepositoryService } from '../../services/products-repository.service';
+import { BasketService } from '../../services/basket.service';
 
 @Component({
   selector: 'app-search',
