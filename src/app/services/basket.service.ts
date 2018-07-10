@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+
+export type ChangedEventListener = () => void;
 
 export interface LineOrder {
   product: Product;
@@ -10,25 +13,52 @@ export interface LineOrder {
   providedIn: 'root'
 })
 export class BasketService {
+  private listeners: ChangedEventListener[] = [];
+
+  constructor() {
+  }
+
+  addListener(listener: ChangedEventListener) {
+    this.listeners.push(listener);
+  }
+
+  removeListener(listener: ChangedEventListener) {
+    let index = this.listeners.findIndex(x => x == listener);
+    this.listeners.splice(index, 1);
+  }
+
   add(product: Product, qty: number) {
     let lineOrders = this.loadLineOrders();
-    lineOrders.push({
-      product: product,
-      qty: qty,
-      price: product.price
-    });
+    let lineOrder = lineOrders.find(x => x.product.id == product.id);
+    if (lineOrder != null) {
+      lineOrder.qty += qty;
+    } else {
+      lineOrders.push({
+        product: product,
+        qty: qty,
+        price: product.price
+      });
+    }
     window.localStorage.basket = JSON.stringify(lineOrders);
+
+    this.fireChangedEventListener();
   }
 
-  update(id: string, qty: number) {
+  update(lineOrder: LineOrder, qty: number) {
     let lineOrders = this.loadLineOrders();
-    lineOrders.filter(x => x.product.id === id).forEach(x => x.qty = qty);
+    lineOrders = lineOrders.filter(x => x.product.id === lineOrder.product.id).map(x => { x.qty = qty; return x; })
+    window.localStorage.basket = JSON.stringify(lineOrders);
+
+    this.fireChangedEventListener();
   }
 
-  remove(id: string) {
+  remove(lineOrder: LineOrder) {
     let lineOrders = this.loadLineOrders();
-    let index = lineOrders.findIndex(x => x.product.id === id);
+    let index = lineOrders.findIndex(x => x.product.id === lineOrder.product.id);
     lineOrders.splice(index, 1);
+    window.localStorage.basket = JSON.stringify(lineOrders);
+
+    this.fireChangedEventListener();
   }
 
   lineOrders(): LineOrder[] {
@@ -42,14 +72,18 @@ export class BasketService {
     });
   }
 
-  total() {
-    let total = 0;
+  total(): number {
     let lineOrders = this.loadLineOrders();
-    lineOrders.forEach(x => total += x.price);
-    return total;
+    let results = 0;
+    lineOrders.forEach(x => results += x.price * x.qty);
+    return results;
   }
 
   private loadLineOrders(): LineOrder[] {
     return JSON.parse(window.localStorage.basket || '[]');
+  }
+
+  private fireChangedEventListener() {
+    this.listeners.forEach(x => x());
   }
 }

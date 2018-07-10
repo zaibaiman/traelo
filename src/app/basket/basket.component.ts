@@ -20,7 +20,25 @@ export class BasketComponent implements OnInit {
   ngOnInit() {
     this.lineOrders = this.basketService.lineOrders();
     this.total = this.basketService.total();
+
+    this.basketService.addListener(() => {
+      this.lineOrders = this.basketService.lineOrders();
+      this.total = this.basketService.total();
+    });
+
     setTimeout(() => { this.init() }, 500);
+  }
+
+  onUpClick(lineOrder: LineOrder) {
+    this.basketService.add(lineOrder.product, 1);
+  }
+
+  onDownClick(lineOrder: LineOrder) {
+    this.basketService.update(lineOrder, lineOrder.qty - 1);
+  }
+
+  onRemoveLineOrderClick(lineOrder) {
+    this.basketService.remove(lineOrder);
   }
 
   onDeliveryAddressClick() {
