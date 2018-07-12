@@ -27,9 +27,9 @@
 
           <!-- Subscribe Form -->
           <div class="col-8 col-md-8">
-              <form class="input-group rounded">
-                <input class="form-control g-brd-secondary-light-v2 g-brd-primary--focus g-color-secondary-dark-v1 g-placeholder-secondary-dark-v1 g-bg-white g-font-weight-400 g-font-size-13 g-px-20 g-py-12" type="text" placeholder="Buscar leche, galletas, cereal ...">
-              </form>
+              <div class="input-group rounded">
+                <input id="search-bar" class="form-control g-brd-secondary-light-v2 g-brd-primary--focus g-color-secondary-dark-v1 g-placeholder-secondary-dark-v1 g-bg-white g-font-weight-400 g-font-size-13 g-px-20 g-py-12" type="text" placeholder="Buscar leche, galletas, cereal ...">
+              </div>
             </div>
             <!-- End Subscribe Form -->
 
@@ -157,14 +157,14 @@
 
               <!-- Article Info -->
               <div class="media-body align-self-center">
-                <h4 class="h5 g-mb-7">
+                <h4 class="h5 g-mb-7" style="font-size: 1.2rem !important;">
                   <span class="g-color-black">{{ product.name }}</span>
                 </h4>
                 <!-- End Article Info -->
 
                 <!-- Article Footer -->
                 <footer class="d-flex justify-content-between g-font-size-16">
-                  <span class="g-color-black g-line-height-1">${{ product.price }}.00</span>
+                  <span class="g-color-black g-line-height-1" style="font-size: 1.5rem !important; font-weight: bold;">${{ product.price }}.00</span>
                   <ul class="list-inline g-color-gray-light-v2 g-font-size-14 g-line-height-1">
                     <li class="list-inline-item align-middle g-brd-right g-brd-gray-light-v3 g-pr-10 g-mr-6">
                       <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover g-cursor-pointer" title="Agregar a Carrito"
