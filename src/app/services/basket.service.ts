@@ -46,7 +46,11 @@ export class BasketService {
 
   update(lineOrder: LineOrder, qty: number) {
     let lineOrders = this.loadLineOrders();
-    lineOrders = lineOrders.filter(x => x.product.id === lineOrder.product.id).map(x => { x.qty = qty; return x; })
+    lineOrders.forEach(x => {
+      if (x.product.id == lineOrder.product.id && qty > 0) {
+        x.qty = qty;
+      }
+    });
     window.localStorage.basket = JSON.stringify(lineOrders);
 
     this.fireChangedEventListener();

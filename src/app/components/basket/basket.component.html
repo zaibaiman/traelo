@@ -88,6 +88,21 @@
               </section>
             </div>
         </div>
+        <div class="row" [hidden]="lineOrders.length > 0">
+          <div class="col-sm-12 text-center text-lg-left g-mb-50">
+            <!-- Icon Blocks -->
+            <span class="u-icon-v1 u-icon-size--lg g-color-teal g-bg-teal-opacity-0_1 g-font-size-18 rounded-circle mb-4">
+              <i class="icon-education-087 u-line-icon-pro"></i>
+            </span>
+            <h3 class="h5 g-color-black g-font-weight-600 mb-2">Canasta Vacia</h3>
+            <p class="mb-0">No tienes ningún producto en tu canasta.</p>
+            <!-- End Icon Blocks -->
+
+            <div class="g-mt-50">
+              <button class="u-ss-btn font-size-13 text-uppercase" (click)="onContinueShoppingClick()">Continuar Comprando</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div [hidden]="checkoutStep != 'address'">
         <div>
