@@ -1,6 +1,6 @@
 <main>
   <!-- Header -->
-  <header id="js-header" class="u-header u-header--static u-shadow-v19">
+  <header class="u-header u-header--static u-shadow-v19">
     <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
       <nav class="js-mega-menu navbar navbar-expand-lg">
         <div class="container">
@@ -28,7 +28,10 @@
           <!-- Subscribe Form -->
           <div class="col-8 col-md-8">
               <div class="input-group rounded">
-                <input id="search-bar" class="form-control g-brd-secondary-light-v2 g-brd-primary--focus g-color-secondary-dark-v1 g-placeholder-secondary-dark-v1 g-bg-white g-font-weight-400 g-font-size-15 g-px-20 g-py-12" type="text" placeholder="Buscar leche, galletas, cereal, pañales, azucar ...">
+                <input #searchBar id="search-bar" class="form-control g-brd-secondary-light-v2 g-brd-primary--focus g-color-secondary-dark-v1 g-placeholder-secondary-dark-v1 g-bg-white g-font-weight-400 g-font-size-15 g-px-20 g-py-12"
+                  type="text"
+                  placeholder="Buscar leche, galletas, cereal, pañales, azucar ..."
+                  (keyup.enter)="onSearchEnter(searchBar.value)">
               </div>
             </div>
             <!-- End Subscribe Form -->
@@ -142,7 +145,7 @@
   </header>
   <!-- End Header -->
 
-  <div class="g-bg-gray-light-v5">
+  <div id="container" class="g-bg-gray-light-v5">
     <div class="container g-py-50">
       <!-- Carousel Slider -->
       <div class="row g-mx-minus-10 g-mb-50">

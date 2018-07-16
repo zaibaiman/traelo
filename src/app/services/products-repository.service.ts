@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 
+declare var elasticlunr: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsRepositoryService {
-  constructor() { }
+  private products: Product[];
+  private index: any;
 
-  search(query: string): Product[] {
-    let products: Product[] = [
+  constructor() {
+    this.start();
+    this.createIndex();
+  }
+
+  start() {
+    this.products = [
       {
         id: '1',
         name: 'Papas sabritas adobadas 140g',
@@ -56,8 +64,50 @@ export class ProductsRepositoryService {
         description: 'Pestañas',
         price: 28,
         imageUrl: 'https://super.walmart.com.mx/images/product-images/img_medium/00750100261512m.jpg'
+      },
+      {
+        id: '8',
+        name: 'Doritos doritos jurassic world nacho 155 g',
+        description: 'Sabritas',
+        price: 25,
+        imageUrl: 'https://super.walmart.com.mx/images/product-images/img_medium/00750101113106m.jpg'
+      },
+      {
+        id: '9',
+        name: 'Papas sabritas crema y especias 170 g',
+        description: 'Sabritas',
+        price: 25,
+        imageUrl: 'https://super.walmart.com.mx/images/product-images/img_medium/00750101111559m.jpg'
+      },
+      {
+        id: '10',
+        name: 'Churrumais churrumais con limoncito 200 g',
+        description: 'Sabritas',
+        price: 24.51,
+        imageUrl: 'https://super.walmart.com.mx/images/product-images/img_medium/00750101113103m.jpg'
       }
     ];
-    return products;
+  }
+
+  search(query: string): Product[] {
+    if (query == null) {
+      return this.products;
+    }
+
+    let results = this.index.search(query,  {
+      expand: true
+    });
+    return results.map(x => x.doc);
+  }
+
+  private createIndex() {
+    this.index = elasticlunr(function () {
+      this.addField('name');
+      this.setRef('id');
+    });
+
+    this.products.forEach(x => {
+      this.index.addDoc(x);
+    });
   }
 }
