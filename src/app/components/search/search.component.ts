@@ -39,9 +39,10 @@ export class SearchComponent implements OnInit {
     $('#search-bar').typeahead({
       hint: true,
       highlight: true,
-      minLength: 1
+      minLength: 1,
     }, {
       name: 'products',
+      limit: 10,
       source: (q, cb) => {
         return this.searchProducts(q, cb);
       }
