@@ -46,3 +46,37 @@
 .tt-suggestion p {
   margin: 0;
 }
+
+.navbar-toggler {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .navbar-brand {
+      margin-left: auto;
+      margin-right: auto;
+  }
+
+  .search-bar-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .tt-suggestion {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .u-ss-toggler {
+    display: none;
+  }
+
+  .navbar-toggler {
+    margin-right: 2px;
+    display: block;
+  }
+
+  footer {
+    text-align: center;
+  }
+}

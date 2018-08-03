@@ -35,6 +35,11 @@ export class SearchComponent implements OnInit {
     this.closeTypeaheadDropdown();
   }
 
+  onOpenBasketClick() {
+    $('.u-ss').addClass('u-ss_opened');
+    $('.u-ss-wrap').width($(window).width());
+  }
+
   private init() {
     $('#search-bar').typeahead({
       hint: true,
