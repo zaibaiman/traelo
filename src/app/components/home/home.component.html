@@ -15,12 +15,15 @@
       <div class="container g-z-index-1">
         <div class="g-max-width-800">
           <h1 class="g-color-white g-font-weight-700 g-font-size-40 g-font-size-60--md g-mb-5">Traelo</h1>
-          <p class="h3 g-color-white g-font-weight-300 g-letter-spacing-1 mb-5">La tiendita de la esquina a la puerta de tu casa.</p>
+          <p class="h5 g-color-white g-font-weight-300 g-letter-spacing-1 mb-5">La tiendita de la esquina a la puerta de tu casa.</p>
         </div>
 
         <div class="input-group u-shadow-v19 g-rounded-50 g-max-width-800">
           <div class="form-control g-color-gray-dark-v4 g-placeholder-gray-dark-v3 border-0 g-rounded-left-50 g-px-20">
-              <input id="search-bar" type="text" placeholder="Buscar leche, galletas, cereal ..." style="width: 100%; border: none; margin-top: 6px; font-size: 18px;">
+              <input #searchBar id="search-bar" type="text"
+                placeholder="Buscar leche, cereal ..."
+                (keyup.enter)="onSearchEnter(searchBar.value)"
+                style="width: 100%; border: none; margin-top: 6px; font-size: 18px; outline: none">
           </div>
           <div class="input-group-append">
             <span class="input-group-text g-bg-white border-0 g-rounded-right-50">

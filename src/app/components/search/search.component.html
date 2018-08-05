@@ -1,4 +1,4 @@
-<main>
+<main [hidden]="hideMainContent">
   <!-- Header -->
   <header class="u-header u-header--static u-shadow-v19">
     <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
@@ -12,7 +12,7 @@
                   data-toggle="collapse"
                   data-target="#navBar"
                   (click)="onOpenBasketClick()">
-            <span class="u-badge-v1--sm g-color-white g-bg-primary g-font-size-11 g-line-height-1_4 g-rounded-50x g-pa-4">3</span>
+            <span class="u-badge-v1--sm g-color-white g-bg-primary g-font-size-11 g-line-height-1_4 g-rounded-50x g-pa-4">{{ lineOrders.length }}</span>
             <i class="icon-hotel-restaurant-105 u-line-icon-pro"></i>
           </button>
           <!-- End Responsive Toggle Button -->
@@ -28,7 +28,7 @@
               <div class="input-group rounded">
                 <input #searchBar id="search-bar" class="form-control g-brd-secondary-light-v2 g-brd-primary--focus g-color-secondary-dark-v1 g-placeholder-secondary-dark-v1 g-bg-white g-font-weight-400 g-font-size-18 g-px-20 g-py-12"
                   type="text"
-                  placeholder="Buscar leche, galletas, cereal, pañales, azucar ..."
+                  placeholder="Buscar leche, galletas, cereal..."
                   (keyup.enter)="onSearchEnter(searchBar.value)">
               </div>
             </div>
@@ -48,9 +48,17 @@
   <!-- End Header -->
 
   <div id="container" class="g-bg-gray-light-v5">
-    <div class="container g-py-50">
-      <!-- Carousel Slider -->
-      <div class="row g-mx-minus-10 g-mb-50">
+    <div class="container g-py-20">
+      <div class="row" [hidden]="products.length > 0">
+        <div class="col-sm-12 text-center text-lg-left g-mt-50 g-mb-50">
+          <span class="u-icon-v1 u-icon-size--lg g-color-teal g-bg-teal-opacity-0_1 g-font-size-50 rounded-circle mb-4">
+            <i class="icon-education-087 u-line-icon-pro"></i>
+          </span>
+          <h3 class="h3 g-color-black g-font-weight-600 mb-2">No se encontraron productos</h3>
+          <p class="mb-0 g-font-size-18">Use la barra de busqueda para buscar productos.</p>
+        </div>
+      </div>
+      <div class="row g-mx-minus-10" [hidden]="products.length == 0">
           <div class="col-md-6 col-lg-4 g-px-10" *ngFor="let product of products">
             <!-- Article -->
             <article class="media g-brd-around g-brd-gray-light-v4 g-bg-white rounded g-pa-10 g-mb-20">
@@ -69,15 +77,25 @@
 
                 <!-- Article Footer -->
                 <footer class="d-flex justify-content-between g-font-size-16">
-                  <span class="g-color-black g-line-height-1" style="font-size: 1.5rem !important; font-weight: bold;">${{ product.price }}.00</span>
+                  <span class="g-color-black g-line-height-1 g-pt-7" style="font-size: 1.5rem !important; font-weight: bold;">${{ product.price.toFixed(2) }}</span>
                   <ul class="list-inline g-color-gray-light-v2 g-font-size-26 g-line-height-1">
-                    <li class="list-inline-item align-middle g-brd-right g-brd-gray-light-v3 g-pr-10 g-mr-6">
-                      <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover g-cursor-pointer" title="Agregar a Carrito"
-                         (click)="onAddToCartClick(product)"
-                         data-toggle="tooltip"
-                         data-placement="top">
+                    <li class="list-inline-item align-middle g-pr-10 g-mr-6">
+                      <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover g-cursor-pointer"
+                        title="Agregar a Carrito"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        (click)="onAddToCartClick(product)"
+                        [hidden]="product.lineOrder != null">
                         <i class="icon-finance-100 u-line-icon-pro"></i>
                       </a>
+                      <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus" [hidden]="product.lineOrder == null">
+                        <span class="js-result form-control text-center g-font-size-13 rounded-0 g-pt-7">{{ product.lineOrder && product.lineOrder.qty || '0' }}</span>
+
+                        <div class="input-group-addon d-flex align-items-center g-width-30 g-brd-gray-light-v2 g-bg-white g-font-size-22 rounded-0 g-px-5 g-py-6">
+                          <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down g-ml-10" (click)="onDownClick(product)"></i>
+                          <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up g-ml-10" (click)="onUpClick(product)"></i>
+                        </div>
+                      </div>
                     </li>
                   </ul>
                 </footer>

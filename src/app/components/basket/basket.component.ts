@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BasketService, LineOrder } from '../../services/basket.service';
 
+import * as firebase from 'firebase';
+
 declare var $: any;
-declare var Prism: any;
 
 @Component({
   selector: 'app-basket',
@@ -12,8 +13,13 @@ declare var Prism: any;
 export class BasketComponent implements OnInit {
   lineOrders: LineOrder[] = [];
   total: number = 0;
+  isOpen = false;
+  coto: string = '';
+  home: string;
+  sendOrder = false;
 
   private checkoutStep: 'resume' | 'address' | 'order' = 'resume';
+  private db = firebase.firestore();
 
   constructor(private basketService: BasketService) { }
 
@@ -45,8 +51,32 @@ export class BasketComponent implements OnInit {
     this.checkoutStep = 'address';
   }
 
-  onMakeOrderClick() {
-    this.checkoutStep = 'order';
+  async onMakeOrderClick() {
+    try {
+      this.sendOrder = true;
+      let lineOrders = this.lineOrders.map(x => {
+        return {
+          price: x.price,
+          qty: x.qty,
+          product: {
+            id: x.product.id,
+            name: x.product.name
+          }
+        }
+      });
+      await this.db.collection('orders').add({
+        coto: this.coto,
+        home: this.home,
+        total: this.basketService.total(),
+        lineOrders: lineOrders
+      });
+      this.basketService.removeAll();
+      this.checkoutStep = 'order';
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.sendOrder = false;
+    }
   }
 
   onContinueShoppingClick() {
@@ -54,35 +84,58 @@ export class BasketComponent implements OnInit {
   }
 
   onBackClick() {
-    this.checkoutStep = 'resume';
+    if (this.checkoutStep === 'resume') {
+      this.close();
+    } else {
+      this.checkoutStep = 'resume';
+    }
   }
 
-  private init() {
-    $.HSCore.components.HSScrollBar.init($('.js-ss-scrollbar'));
-    $.HSCore.components.HSSelect.init('.js-ss-select');
-
-    var styleSwitcher = $('.u-ss');
-
-    $('.u-ss-toggler').on('click', (e) => {
-      e.preventDefault();
-
-      if (styleSwitcher.hasClass('u-ss_initialized')) {
-        this.close();
-        return false;
-      } else {
-        setTimeout(() => {
-          styleSwitcher.addClass('u-ss_opened');
-          styleSwitcher.addClass('u-ss_initialized');
-        }, 100);
+  open(maxWidth: number) {
+    this.isOpen = true;
+    let styleSwitcher = $('.u-ss');
+    setTimeout(() => {
+      $('html, body').css({
+        overflow: 'hidden',
+        position: 'fixed',
+        height: '100%'
+      });
+      if (maxWidth > 0) {
+        $('.u-ss-wrap').width(maxWidth);
       }
-    });
+      styleSwitcher.addClass('u-ss_opened');
+      styleSwitcher.addClass('u-ss_initialized');
+    }, 100);
   }
 
-  private close() {
+  close() {
+    this.isOpen = false;
     this.checkoutStep = 'resume';
     var styleSwitcher = $('.u-ss');
     if (styleSwitcher.hasClass('u-ss_initialized')) {
       styleSwitcher.toggleClass('u-ss_opened');
+      $('html, body').css({
+        overflow: 'auto',
+        position: 'static',
+        height: 'auto'
+      });
     }
+  }
+
+  private init() {
+    $.HSCore.components.HSScrollBar.init($('.js-ss-scrollbar'));
+    // $.HSCore.components.HSSelect.init('.js-ss-select');
+
+    let styleSwitcher = $('.u-ss');
+
+    $('.u-ss-toggler').on('click', (e) => {
+      e.preventDefault();
+
+      if (styleSwitcher.hasClass('u-ss_opened')) {
+        this.close();
+      } else {
+        this.open(0);
+      }
+    });
   }
 }

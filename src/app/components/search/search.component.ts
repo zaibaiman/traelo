@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProductsRepositoryService } from '../../services/products-repository.service';
-import { BasketService } from '../../services/basket.service';
+import { BasketService, LineOrder } from '../../services/basket.service';
+import { BasketComponent } from '../basket/basket.component';
 
 declare var $: any;
+
+interface ProductVm extends Product {
+  lineOrder: LineOrder;
+}
 
 @Component({
   selector: 'app-search',
@@ -10,14 +15,28 @@ declare var $: any;
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  products: Product[] = [];
+  products: ProductVm[] = [];
   query: string;
+  lineOrders: LineOrder[] = [];
+  hideMainContent = false;
+
+  @ViewChild(BasketComponent)
+  basketComponent: BasketComponent;
 
   constructor(private productsService: ProductsRepositoryService,
     private basketService: BasketService) { }
 
   ngOnInit() {
-    this.products = this.productsService.search(null);
+    this.products = <ProductVm[]> this.productsService.search(null);
+
+    this.lineOrders = this.basketService.lineOrders();
+    this.updateLineOrderOfProducts();
+
+    this.basketService.addListener(() => {
+      this.lineOrders = this.basketService.lineOrders();
+      this.updateLineOrderOfProducts();
+    });
+
     this.init();
   }
 
@@ -31,13 +50,27 @@ export class SearchComponent implements OnInit {
 
   onSearchEnter(query: string) {
     query = query === '' ? null : query;
-    this.products = this.productsService.search(query);
+    this.products = <ProductVm[]> this.productsService.search(query);
+    this.updateLineOrderOfProducts();
     this.closeTypeaheadDropdown();
   }
 
   onOpenBasketClick() {
-    $('.u-ss').addClass('u-ss_opened');
-    $('.u-ss-wrap').width($(window).width());
+    this.basketComponent.open(window.innerWidth);
+  }
+
+  onUpClick(product: ProductVm) {
+    this.basketService.add(product.lineOrder.product, 1);
+  }
+
+  onDownClick(product: ProductVm) {
+    if (product.lineOrder) {
+      if (product.lineOrder.qty == 1) {
+        this.basketService.remove(product.lineOrder);
+      } else {
+        this.basketService.update(product.lineOrder, product.lineOrder.qty - 1);
+      }
+    }
   }
 
   private init() {
@@ -54,20 +87,23 @@ export class SearchComponent implements OnInit {
     });
 
     $('#search-bar').on('typeahead:selected', (evt, item) => {
-      this.products = this.productsService.search(item);
+      this.products = <ProductVm[]> this.productsService.search(item);
     });
 
     let onWindowResize = () => {
       let wh = $(window).height();
       let hh = $('header').height();
+      let ch = $('#container').height();
       let fh = $('footer').height();
-      if (hh + $('#container').height() + fh < wh) {
-        $('#container').height(wh - hh - fh);
+      if (hh + ch + fh < wh) {
+        $('#container').css('min-height', `${wh - hh - fh}px`);
       }
     };
 
-    // $(window).resize(onWindowResize);
-    // onWindowResize();
+    $(window).resize(onWindowResize);
+    setTimeout(() => {
+      onWindowResize();
+    }, 1000);
   }
 
   private searchProducts(query, callback) {
@@ -77,5 +113,16 @@ export class SearchComponent implements OnInit {
 
   private closeTypeaheadDropdown() {
     $('#search-bar').typeahead('close');
+  }
+
+  private updateLineOrderOfProducts() {
+    this.products.forEach(p => p.lineOrder = null);
+    this.lineOrders.forEach(lo => {
+      this.products.forEach(p => {
+        if (p.id === lo.product.id) {
+          p.lineOrder = lo;
+        }
+      });
+    });
   }
 }

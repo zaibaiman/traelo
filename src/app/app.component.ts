@@ -18,5 +18,10 @@ export class AppComponent {
       storageBucket: "traelo-3630b.appspot.com",
       messagingSenderId: "337703983049"
     });
+
+    firebase.firestore().settings({
+      timestampsInSnapshots: true
+    });
   }
+
 }

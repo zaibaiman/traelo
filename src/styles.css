@@ -23,7 +23,7 @@
   font-size: 18px;
   line-height: 24px;
   font-weight: 300;
-  color: gray;
+  color: black;
 }
 
 .tt-highlight {
@@ -51,6 +51,16 @@
   display: none;
 }
 
+.u-ss-select {
+  width: 100%;
+  border: 1px solid lightgray;
+  background-color: white;
+  padding: 10px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 @media only screen and (max-width: 600px) {
   .navbar-brand {
       margin-left: auto;
@@ -63,8 +73,12 @@
   }
 
   .tt-suggestion {
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .tt-suggestion:not(:first-child) {
+    border-top: 1px solid #efefef;
   }
 
   .u-ss-toggler {

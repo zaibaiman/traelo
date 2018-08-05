@@ -65,6 +65,11 @@ export class BasketService {
     this.fireChangedEventListener();
   }
 
+  removeAll() {
+    window.localStorage.removeItem('basket');
+    this.fireChangedEventListener();
+  }
+
   lineOrders(): LineOrder[] {
     let lineOrders = this.loadLineOrders();
     return lineOrders.map(x => {

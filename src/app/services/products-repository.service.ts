@@ -22,18 +22,18 @@ export class ProductsRepositoryService {
     if (window.localStorage.products) {
       this.products = JSON.parse(window.localStorage.products);
     } else {
-      const querySnapshot = await this.db.collection('products').get();
+      const querySnapshot = await this.db.collection('products').limit(3000).get();
       querySnapshot.forEach(doc => {
         this.products.push({
           id: doc.id,
           name: doc.data().shortDescription,
-          description: doc.data().longDescription,
           price: doc.data().price,
-          imageUrl: `https://super.walmart.com.mx/images/product-images/img_medium/${doc.data().imageId}m.jpg`
+          imageId: doc.data().imageId
         });
       });
       window.localStorage.products = JSON.stringify(this.products);
     }
+    this.products.forEach(x => x.imageUrl = `https://super.walmart.com.mx/images/product-images/img_medium/${x.imageId}m.jpg`);
 
     this.createIndex();
   }
