@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ProductsRepositoryService } from '../../services/products-repository.service';
 import { BasketService, LineOrder } from '../../services/basket.service';
 import { BasketComponent } from '../basket/basket.component';
+
 
 declare var $: any;
 
@@ -18,26 +20,24 @@ export class SearchComponent implements OnInit {
   products: ProductVm[] = [];
   query: string;
   lineOrders: LineOrder[] = [];
-  hideMainContent = false;
+  productServiceStarted = false;
 
   @ViewChild(BasketComponent)
   basketComponent: BasketComponent;
 
   constructor(private productsService: ProductsRepositoryService,
-    private basketService: BasketService) { }
+    private basketService: BasketService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.products = <ProductVm[]> this.productsService.search(null);
-
-    this.lineOrders = this.basketService.lineOrders();
-    this.updateLineOrderOfProducts();
-
-    this.basketService.addListener(() => {
-      this.lineOrders = this.basketService.lineOrders();
-      this.updateLineOrderOfProducts();
-    });
-
-    this.init();
+    if (!this.productsService.isStarted()) {
+      this.productsService.addStartedEventListener(() => {
+        this.productServiceStarted = true;
+        this.onProductServiceStarted();
+      });
+    } else {
+      this.productServiceStarted = true;
+      this.onProductServiceStarted();
+    }
   }
 
   onAddToCartClick(product: Product) {
@@ -49,9 +49,7 @@ export class SearchComponent implements OnInit {
   }
 
   onSearchEnter(query: string) {
-    query = query === '' ? null : query;
-    this.products = <ProductVm[]> this.productsService.search(query);
-    this.updateLineOrderOfProducts();
+    this.search(query);
     this.closeTypeaheadDropdown();
   }
 
@@ -73,6 +71,26 @@ export class SearchComponent implements OnInit {
     }
   }
 
+  private onProductServiceStarted() {
+    this.products = <ProductVm[]> this.productsService.search(null);
+
+    this.lineOrders = this.basketService.lineOrders();
+    this.updateLineOrderOfProducts();
+
+    this.basketService.addListener(() => {
+      this.lineOrders = this.basketService.lineOrders();
+      this.updateLineOrderOfProducts();
+    });
+
+    let query = this.activatedRoute.snapshot.queryParams['q'];
+    if (query) {
+      $('#search-bar').val(query);
+      this.search(query);
+    }
+
+    this.init();
+  }
+
   private init() {
     $('#search-bar').typeahead({
       hint: true,
@@ -82,7 +100,7 @@ export class SearchComponent implements OnInit {
       name: 'products',
       limit: 10,
       source: (q, cb) => {
-        return this.searchProducts(q, cb);
+        return this.searchProductsTypeAhead(q, cb);
       }
     });
 
@@ -106,7 +124,13 @@ export class SearchComponent implements OnInit {
     }, 1000);
   }
 
-  private searchProducts(query, callback) {
+  private search(query: string) {
+    query = query === '' ? null : query;
+    this.products = <ProductVm[]> this.productsService.search(query);
+    this.updateLineOrderOfProducts();
+  }
+
+  private searchProductsTypeAhead(query, callback) {
     let products = this.productsService.search(query);
     callback(products.map(x => x.name));
   }

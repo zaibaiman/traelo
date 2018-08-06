@@ -1,4 +1,4 @@
-<main>
+<main [hidden]="!productServiceStarted">
 
   <!-- Promo Block -->
   <section class="g-pos-rel">
@@ -46,3 +46,4 @@
     <i class="hs-icon hs-icon-arrow-top"></i>
   </a>
 </main>
+<app-loader [hidden]="productServiceStarted"></app-loader>

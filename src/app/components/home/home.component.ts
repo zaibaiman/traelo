@@ -11,12 +11,21 @@ declare var $: any;
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  productServiceStarted = false;
 
   constructor(private productsService: ProductsRepositoryService,
     private basketService: BasketService, private router: Router) { }
 
   ngOnInit() {
     this.init();
+
+    if (!this.productsService.isStarted()) {
+      this.productsService.addStartedEventListener(() => {
+        this.productServiceStarted = true;
+      });
+    } else {
+      this.productServiceStarted = true;
+    }
   }
 
   onSearchEnter(query: string) {

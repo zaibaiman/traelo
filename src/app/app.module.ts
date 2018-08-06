@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/search.component';
 import { HomeComponent } from './components/home/home.component';
 import { BasketComponent } from './components/basket/basket.component';
+import { LoaderComponent } from './components/loader/loader.component';
 import { BasketService } from './services/basket.service';
 import { ProductsRepositoryService } from './services/products-repository.service';
 
@@ -15,7 +16,8 @@ import { ProductsRepositoryService } from './services/products-repository.servic
     AppComponent,
     SearchComponent,
     HomeComponent,
-    BasketComponent
+    BasketComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

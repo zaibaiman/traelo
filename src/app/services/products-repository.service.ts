@@ -4,6 +4,8 @@ import * as firestore from 'firebase/firestore';
 
 declare var elasticlunr: any;
 
+export type StartedEventListener = () => void;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,9 +13,20 @@ export class ProductsRepositoryService {
   private products: Product[];
   private index: any;
   private db = firebase.firestore();
+  private listeners: StartedEventListener[] = [];
+  private started = false;
 
   constructor() {
     this.start();
+  }
+
+  addStartedEventListener(listener: StartedEventListener) {
+    this.listeners.push(listener);
+  }
+
+  removeStartedEventListener(listener: StartedEventListener) {
+    let index = this.listeners.findIndex(x => x == listener);
+    this.listeners.splice(index, 1);
   }
 
   async start() {
@@ -34,8 +47,14 @@ export class ProductsRepositoryService {
       window.localStorage.products = JSON.stringify(this.products);
     }
     this.products.forEach(x => x.imageUrl = `https://super.walmart.com.mx/images/product-images/img_medium/${x.imageId}m.jpg`);
-
     this.createIndex();
+
+    this.started = true;
+    this.fireStartedEventListener();
+  }
+
+  isStarted() {
+    return this.started;
   }
 
   search(query: string): Product[] {
@@ -46,6 +65,7 @@ export class ProductsRepositoryService {
     let results = this.index.search(query,  {
       expand: true
     });
+    results = results.slice(0, Math.min(50, results.length));
     return results.map(x => x.doc);
   }
 
@@ -58,5 +78,9 @@ export class ProductsRepositoryService {
     this.products.forEach(x => {
       this.index.addDoc(x);
     });
+  }
+
+  private fireStartedEventListener() {
+    this.listeners.forEach(listener => listener());
   }
 }

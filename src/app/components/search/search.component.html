@@ -1,4 +1,4 @@
-<main [hidden]="hideMainContent">
+<main [hidden]="!productServiceStarted">
   <!-- Header -->
   <header class="u-header u-header--static u-shadow-v19">
     <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
@@ -115,7 +115,7 @@
     <div class="container g-pt-30 g-pb-10">
       <div class="row justify-content-between align-items-center">
         <div class="col-md-6 g-mb-20">
-          <p class="g-font-size-13 g-color-white mb-0">2018 &copy; Traelo. Todos los Derechos Reservados.</p>
+          <p class="g-font-size-13 g-color-white mb-0">2018 &copy; Traelo.</p>
         </div>
       </div>
     </div>
@@ -123,4 +123,5 @@
   </footer>
   <!-- End Footer -->
 </main>
-<app-basket></app-basket>
+<app-basket [hidden]="!productServiceStarted"></app-basket>
+<app-loader [hidden]="productServiceStarted"></app-loader>
