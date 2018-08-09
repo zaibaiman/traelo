@@ -32,7 +32,20 @@ export class ProductsRepositoryService {
   async start() {
     this.products = [];
 
-    if (window.localStorage.products) {
+    let reloadAllProducts = false;
+
+    let webSnapshot = await this.db.collection('settings').doc('web').get();
+    if (localStorage.webSettings) {
+      if (JSON.parse(localStorage.webSettings).productsVersion !== webSnapshot.data().productsVersion) {
+        reloadAllProducts = true;
+      }
+    } else {
+      reloadAllProducts = true;
+    }
+
+    console.log(`reloading: ${reloadAllProducts}`);
+
+    if (localStorage.products && !reloadAllProducts) {
       this.products = JSON.parse(window.localStorage.products);
     } else {
       const querySnapshot = await this.db.collection('products').limit(3000).get();
@@ -44,8 +57,12 @@ export class ProductsRepositoryService {
           imageId: doc.data().imageId
         });
       });
-      window.localStorage.products = JSON.stringify(this.products);
+      localStorage.products = JSON.stringify(this.products);
     }
+    localStorage.webSettings = JSON.stringify({
+      productsVersion: webSnapshot.data().productsVersion
+    });
+
     this.products.forEach(x => x.imageUrl = `https://super.walmart.com.mx/images/product-images/img_medium/${x.imageId}m.jpg`);
     this.createIndex();
 
