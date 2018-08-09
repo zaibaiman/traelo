@@ -34,6 +34,8 @@ export class HomeComponent implements OnInit {
   }
 
   private init() {
+    $.HSCore.components.HSCarousel.init('.js-carousel');
+    
     $('#search-bar').typeahead({
       hint: true,
       highlight: true,
