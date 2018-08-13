@@ -65,6 +65,7 @@ export class BasketComponent implements OnInit {
         }
       });
       await this.db.collection('orders').add({
+        createdAt: new Date().toUTCString(),
         coto: this.coto,
         home: this.home,
         total: this.basketService.total(),
